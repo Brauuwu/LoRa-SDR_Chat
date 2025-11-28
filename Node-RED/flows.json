@@ -1,0 +1,971 @@
+[
+    {
+        "id": "02971eb66f715999",
+        "type": "tab",
+        "label": "ADALM PLUTO Dashboard",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "49b75d0683d501f1",
+        "type": "function",
+        "z": "02971eb66f715999",
+        "name": "Type Text",
+        "func": "// Nếu là giá trị nhập từ text input thì lưu lại\nif (msg.topic === \"input\") {\n    context.set(\"lastValue\", msg.payload);\n    return null; // không gửi đi\n}\n\n// Nếu là button thì lấy giá trị đã nhập trước đó và gửi ra\nif (msg.topic === \"button\") {\n    var val = context.get(\"lastValue\") || \"\";\n    msg.payload = val;\n    msg.topic = \"data/input\"; // Đặt lại topic để lưu vào DB\n    return msg;\n}\n\nreturn null;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 560,
+        "y": 100,
+        "wires": [
+            [
+                "c19b4d9b2bfec153",
+                "f233eb7cee737adf"
+            ]
+        ]
+    },
+    {
+        "id": "c19b4d9b2bfec153",
+        "type": "mqtt out",
+        "z": "02971eb66f715999",
+        "name": "",
+        "topic": "data/input",
+        "qos": "0",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "9a1856e5d82fdab4",
+        "x": 780,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "ca406e60edd0c628",
+        "type": "mqtt in",
+        "z": "02971eb66f715999",
+        "name": "",
+        "topic": "data/output",
+        "qos": "0",
+        "datatype": "auto",
+        "broker": "9a1856e5d82fdab4",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 230,
+        "y": 220,
+        "wires": [
+            [
+                "cdbbbb4ed3bd20bb"
+            ]
+        ]
+    },
+    {
+        "id": "cdbbbb4ed3bd20bb",
+        "type": "function",
+        "z": "02971eb66f715999",
+        "name": "Store log UI",
+        "func": "let logs = context.get(\"logs\") || [];\nlet ts = new Date().toLocaleTimeString();\nlogs.push(`[${ts}] | ${msg.payload} |`);\n\n// giữ tối đa 40 dòng\nif (logs.length > 30) logs.shift();\n\ncontext.set(\"logs\", logs);\nmsg.payload = logs.join(\"<br>\");\nreturn msg;",
+        "outputs": 1,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 570,
+        "y": 220,
+        "wires": [
+            [
+                "e5bb92346c57509f"
+            ]
+        ]
+    },
+    {
+        "id": "a670a802180c4bd8",
+        "type": "ui_button",
+        "z": "02971eb66f715999",
+        "name": "",
+        "group": "625763203a3f7821",
+        "order": 2,
+        "width": 5,
+        "height": 1,
+        "passthru": false,
+        "label": "SEND",
+        "tooltip": "",
+        "color": "",
+        "bgcolor": "",
+        "className": "",
+        "icon": "",
+        "payload": "",
+        "payloadType": "str",
+        "topic": "button",
+        "topicType": "str",
+        "x": 340,
+        "y": 140,
+        "wires": [
+            [
+                "49b75d0683d501f1"
+            ]
+        ]
+    },
+    {
+        "id": "127023e31d53e1c8",
+        "type": "ui_text_input",
+        "z": "02971eb66f715999",
+        "name": "",
+        "label": "Type",
+        "tooltip": "Type your text",
+        "group": "625763203a3f7821",
+        "order": 1,
+        "width": 5,
+        "height": 2,
+        "passthru": true,
+        "mode": "text",
+        "delay": 300,
+        "topic": "input",
+        "sendOnBlur": true,
+        "className": "",
+        "topicType": "str",
+        "x": 340,
+        "y": 60,
+        "wires": [
+            [
+                "49b75d0683d501f1"
+            ]
+        ]
+    },
+    {
+        "id": "f233eb7cee737adf",
+        "type": "ui_text",
+        "z": "02971eb66f715999",
+        "group": "625763203a3f7821",
+        "order": 4,
+        "width": 5,
+        "height": 8,
+        "name": "",
+        "label": "Payload",
+        "format": "{{msg.payload}}",
+        "layout": "col-center",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": "",
+        "color": "#000000",
+        "x": 780,
+        "y": 60,
+        "wires": []
+    },
+    {
+        "id": "e5bb92346c57509f",
+        "type": "ui_template",
+        "z": "02971eb66f715999",
+        "group": "ac026eb928657c57",
+        "name": "Log Viewer",
+        "order": 3,
+        "width": 7,
+        "height": 10,
+        "format": "<div style=\"height:100%; overflow-y:auto; font-family:monospace; font-size:14px;\">\n    <div ng-bind-html=\"msg.payload\"></div>\n</div>",
+        "storeOutMessages": true,
+        "fwdInMessages": true,
+        "resendOnRefresh": true,
+        "templateScope": "local",
+        "className": "",
+        "x": 910,
+        "y": 220,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "b5342e6ee4be56b7",
+        "type": "mqtt in",
+        "z": "02971eb66f715999",
+        "name": "",
+        "topic": "data/hardwaregain",
+        "qos": "0",
+        "datatype": "auto",
+        "broker": "9a1856e5d82fdab4",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 170,
+        "y": 460,
+        "wires": [
+            [
+                "ec96cd404114bc9e"
+            ]
+        ]
+    },
+    {
+        "id": "dbaeb04e503fa6f7",
+        "type": "ui_text",
+        "z": "02971eb66f715999",
+        "group": "ac026eb928657c57",
+        "order": 2,
+        "width": 6,
+        "height": 1,
+        "name": "",
+        "label": "Hardware Gain",
+        "format": "{{msg.payload}} dB",
+        "layout": "row-spread",
+        "className": "",
+        "x": 940,
+        "y": 460,
+        "wires": []
+    },
+    {
+        "id": "272cb92557247e73",
+        "type": "mqtt in",
+        "z": "02971eb66f715999",
+        "name": "",
+        "topic": "data/rssi",
+        "qos": "0",
+        "datatype": "auto",
+        "broker": "9a1856e5d82fdab4",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 220,
+        "y": 320,
+        "wires": [
+            [
+                "1d4b95562654ff77"
+            ]
+        ]
+    },
+    {
+        "id": "772e95e39f5fa045",
+        "type": "ui_text",
+        "z": "02971eb66f715999",
+        "group": "ac026eb928657c57",
+        "order": 1,
+        "width": 6,
+        "height": 1,
+        "name": "",
+        "label": "RSSI",
+        "format": "{{msg.payload}} dBm",
+        "layout": "row-spread",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": "",
+        "color": "#000000",
+        "x": 910,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "10f5a68c555a6f1e",
+        "type": "ui_chart",
+        "z": "02971eb66f715999",
+        "name": "RSSI Chart",
+        "group": "session-group",
+        "order": 7,
+        "width": 10,
+        "height": 4,
+        "label": "RSSI (dBm)",
+        "chartType": "line",
+        "legend": "false",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": false,
+        "ymin": "-120",
+        "ymax": "0",
+        "removeOlder": "1",
+        "removeOlderPoints": "60",
+        "removeOlderUnit": "60",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#1f77b4",
+            "#000000",
+            "#000000",
+            "#000000",
+            "#000000",
+            "#000000",
+            "#000000",
+            "#000000",
+            "#000000"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "className": "",
+        "x": 910,
+        "y": 360,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "4f85cd47ed32adcc",
+        "type": "ui_chart",
+        "z": "02971eb66f715999",
+        "name": "Gain Chart",
+        "group": "session-group",
+        "order": 8,
+        "width": 10,
+        "height": 4,
+        "label": "Hardware Gain (dB)",
+        "chartType": "line",
+        "legend": "false",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": false,
+        "ymin": "0",
+        "ymax": "80",
+        "removeOlder": "1",
+        "removeOlderPoints": "60",
+        "removeOlderUnit": "60",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#ff7f0e",
+            "#000000",
+            "#000000",
+            "#000000",
+            "#000000",
+            "#000000",
+            "#000000",
+            "#000000",
+            "#000000"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "className": "",
+        "x": 930,
+        "y": 500,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "e10898223d690187",
+        "type": "mqtt in",
+        "z": "02971eb66f715999",
+        "name": "",
+        "topic": "data/hex",
+        "qos": "0",
+        "datatype": "buffer",
+        "broker": "9a1856e5d82fdab4",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 160,
+        "y": 640,
+        "wires": [
+            [
+                "68070bcb299dc34f"
+            ]
+        ]
+    },
+    {
+        "id": "d020dd922e5a5889",
+        "type": "ui_text",
+        "z": "02971eb66f715999",
+        "group": "ac026eb928657c57",
+        "order": 10,
+        "width": 12,
+        "height": 1,
+        "name": "",
+        "label": "Last Msg",
+        "format": "{{msg.payload}}",
+        "layout": "col-center",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 960,
+        "y": 560,
+        "wires": []
+    },
+    {
+        "id": "435864d0fcafad64",
+        "type": "ui_text",
+        "z": "02971eb66f715999",
+        "group": "ac026eb928657c57",
+        "order": 5,
+        "width": 5,
+        "height": 1,
+        "name": "",
+        "label": "BER (Msg)",
+        "format": "{{msg.payload}}",
+        "layout": "col-center",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 970,
+        "y": 600,
+        "wires": []
+    },
+    {
+        "id": "026c321bf5231a60",
+        "type": "ui_text",
+        "z": "02971eb66f715999",
+        "group": "ac026eb928657c57",
+        "order": 7,
+        "width": 5,
+        "height": 1,
+        "name": "",
+        "label": "Error bits (Msg)",
+        "format": "{{msg.payload}}",
+        "layout": "col-center",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 980,
+        "y": 680,
+        "wires": []
+    },
+    {
+        "id": "3e76bb9298a29529",
+        "type": "ui_text",
+        "z": "02971eb66f715999",
+        "group": "ac026eb928657c57",
+        "order": 6,
+        "width": 5,
+        "height": 1,
+        "name": "",
+        "label": "Total bits (Msg)",
+        "format": "{{msg.payload}}",
+        "layout": "col-center",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 980,
+        "y": 720,
+        "wires": []
+    },
+    {
+        "id": "68070bcb299dc34f",
+        "type": "function",
+        "z": "02971eb66f715999",
+        "name": "INSERT Rx",
+        "func": "// *** BƯỚC 1: KIỂM TRA SESSION ***\nlet session = global.get(\"active_session\");\nif (!session) {\n    node.status({fill:\"grey\", shape:\"dot\", text:\"Session inactive\"});\n    return null;\n}\n// --------------------------------\n\n// *** BƯỚC 1b: LẤY DỮ LIỆU TỪ GLOBAL CONTEXT ***\n// Lấy giá trị RSSI và Gain mới nhất đã được lưu\nlet current_rssi = global.get(\"current_rssi\") || null;\nlet current_gain = global.get(\"current_gain\") || null;\n// --------------------------------\n\n// --- Helper Function ---\nfunction countSetBits(byte) {\n    let count = 0;\n    for (let i = 0; i < 8; i++) {\n        if ((byte >> i) & 1) {\n            count++;\n        }\n    }\n    return count;\n}\n\n// --- 1. Dữ liệu gốc (HARD-CODE) ---\nconst originalText = \"Hello world IECSACT. This is message from AVSTC. X\";\nconst originalBuffer = Buffer.from(originalText, 'utf8'); \n\n// --- 2. Xử lý tin nhắn đến ---\nif (msg.topic !== \"data/hex\") {\n    return null; \n}\n\n// --- 3. Dữ liệu nhận được (TỪ MQTT) ---\nconst receivedData = msg.payload;\nlet receivedBuffer;\n\n// --- 4. Kiểm tra đầu vào (ĐÃ SỬA LỖI) ---\nif (Buffer.isBuffer(receivedData)) {\n    receivedBuffer = receivedData;\n} else if (typeof receivedData === 'string') {\n    // Dự phòng: Nếu MQTT vẫn gửi string, giả định nó là HEX\n    try {\n        receivedBuffer = Buffer.from(receivedData, 'hex');\n    } catch (e) {\n        node.error(\"Lỗi: msg.payload là string nhưng không phải HEX hợp lệ.\", msg);\n        return null;\n    }\n} else {\n    node.error(\"Lỗi: msg.payload không phải là Buffer hoặc String.\", msg);\n    return null;\n}\n\n// --- 5. So sánh ---\nconst length = Math.min(originalBuffer.length, receivedBuffer.length);\nif (originalBuffer.length !== receivedBuffer.length) {\n    node.warn(`Lỗi độ dài byte: Gốc ${originalBuffer.length} bytes, Nhận được ${receivedBuffer.length} bytes.`);\n}\n\n// --- 6. Tính toán BER (của 1 bản tin này) ---\nlet totalBits_this_msg = length * 8; \nlet errorBits_this_msg = 0;\nfor (let i = 0; i < length; i++) {\n    let xorByte = originalBuffer[i] ^ receivedBuffer[i];\n    errorBits_this_msg += countSetBits(xorByte);\n}\nlet individual_ber = (totalBits_this_msg > 0) ? (errorBits_this_msg / totalBits_this_msg) : 0;\n\n// --- 7. TÍNH TOÁN BER TỔNG HỢP CỦA PHIÊN ---\nlet stats = global.get(\"session_stats\") || { msg_count: 0, total_errors_sum: 0, total_bits_sum: 0 };\nstats.msg_count += 1;\nstats.total_errors_sum += errorBits_this_msg; \nstats.total_bits_sum += totalBits_this_msg;   \nlet session_aggregate_ber = 0;\nif (stats.total_bits_sum > 0) {\n    session_aggregate_ber = stats.total_errors_sum / stats.total_bits_sum;\n}\nglobal.set(\"session_stats\", stats);\n\nnode.status({\n    fill: \"green\",\n    shape: \"dot\",\n    text: `Session BER: ${session_aggregate_ber.toExponential(2)} (Msg: ${stats.msg_count})`\n});\n\n// --- 8. Chuẩn bị dữ liệu (dạng Object) ---\nlet data = {\n    msg_value: receivedBuffer.toString('utf8'), \n    ber: individual_ber.toExponential(4), \n    error_bits: errorBits_this_msg, \n    total_bits: totalBits_this_msg, \n    session_ber_avg: session_aggregate_ber.toExponential(4),  \n    rssi: current_rssi,\n    gain: current_gain\n};\n\n// --- 9. Chuẩn bị gửi đến MySQL (ĐÃ CẬP NHẬT) ---\nmsg.topic = \"INSERT INTO rx_msg (msg_value, total_bits, error_bits, ber, datetime, session_name, rssi_value, gain_value) VALUES (?, ?, ?, ?, NOW(), ?, ?, ?)\";\nmsg.payload = [\n    data.msg_value,\n    data.total_bits,\n    data.error_bits,\n    data.ber, \n    session,\n    data.rssi, // Thêm RSSI\n    data.gain  // Thêm Gain\n];\n// ------------------------------\n\n// --- 10. \"Xuất dưới dạng JSON\" ---\nmsg.original_data = JSON.stringify(data);\n\n// 11. Gửi đến node mysql\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 330,
+        "y": 640,
+        "wires": [
+            [
+                "abfc36049a318347"
+            ]
+        ]
+    },
+    {
+        "id": "abfc36049a318347",
+        "type": "mysql",
+        "z": "02971eb66f715999",
+        "mydb": "ab4406daca1fd4b0",
+        "name": "sdr_data/rx_msg",
+        "x": 530,
+        "y": 640,
+        "wires": [
+            [
+                "17c4305dbaac67c9"
+            ]
+        ]
+    },
+    {
+        "id": "17c4305dbaac67c9",
+        "type": "function",
+        "z": "02971eb66f715999",
+        "name": "SELECT Rx",
+        "func": "// Node này nhận output từ mysql (sau khi INSERT)\n// Dữ liệu gốc được lưu trong msg.original_data DƯỚI DẠNG JSON STRING\n\n// --- 1. Lấy chuỗi JSON ---\nlet jsonData = msg.original_data;\nif (!jsonData || typeof jsonData !== 'string') {\n    node.warn(\"Không tìm thấy msg.original_data (JSON string).\");\n    return null; \n}\n\n// --- 2. \"Tách JSON\" (Parse chuỗi về lại Object) ---\nlet data;\ntry {\n    data = JSON.parse(jsonData);\n} catch (e) {\n    node.error(\"Lỗi parse JSON: \" + e.message, msg);\n    return null;\n}\n\n// --- 3. Tách Object ra 5 tin nhắn riêng biệt ---\nlet msg1_hex     = { payload: data.msg_value };\nlet msg2_ber     = { payload: data.ber };           // BER tức thời của tin nhắn\nlet msg3_error   = { payload: data.error_bits };\nlet msg4_total   = { payload: data.total_bits };\nlet msg5_avg_ber = { payload: data.session_ber_avg }; // BER TỔNG HỢP của phiên\n\n// Trả về mảng 5 tin nhắn cho 5 output\nreturn [ msg1_hex, msg2_ber, msg3_error, msg4_total, msg5_avg_ber ];",
+        "outputs": 5,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 720,
+        "y": 640,
+        "wires": [
+            [
+                "d020dd922e5a5889"
+            ],
+            [
+                "435864d0fcafad64",
+                "6f4ca245b821bf4c"
+            ],
+            [
+                "026c321bf5231a60"
+            ],
+            [
+                "3e76bb9298a29529"
+            ],
+            [
+                "f544504af2fd4d45"
+            ]
+        ]
+    },
+    {
+        "id": "9629148398aa94fd",
+        "type": "function",
+        "z": "02971eb66f715999",
+        "name": "Session Controller",
+        "func": "// Lưu tên session tạm thời\nif (msg.topic === \"session_name\") {\n    context.set(\"session_name_input\", msg.payload);\n    return null; // Không làm gì thêm\n}\n\n// Lưu thời gian\nif (msg.topic === \"duration\") {\n    context.set(\"duration\", msg.payload);\n    return null;\n}\n\nlet activeSession = global.get(\"active_session\");\n\nif (msg.topic === \"start\") {\n    // Lấy tên đã nhập, hoặc tạo tên mặc định nếu rỗng\n    let sessionName = context.get(\"session_name_input\");\n    if (!sessionName) {\n        let ts = new Date().toISOString().replace(/:/g,'-').slice(0, 19);\n        sessionName = `session_${ts}`;\n    }\n    \n    // Đặt tên session đang hoạt động\n    global.set(\"active_session\", sessionName);\n    \n    // *** PHẦN MỚI: Reset bộ đếm tổng ***\n    global.set(\"session_stats\", {\n        msg_count: 0,\n        total_errors_sum: 0, // Tổng lỗi\n        total_bits_sum: 0    // Tổng bit\n    });\n    // ------------------------------------\n\n    node.status({ fill: \"green\", shape: \"dot\", text: sessionName });\n    \n    let msg1_ui = { payload: sessionName };\n    let msg2_timer = null;\n    let duration = context.get(\"duration\") || 0;\n    if (duration > 0) {\n        msg2_timer = { payload: duration * 1000 };\n    }\n    \n    return [ msg1_ui, msg2_timer ];\n}\n\nif (msg.topic === \"stop\") {\n    let stoppedSession = global.get(\"active_session\") || \"None\";\n    global.set(\"active_session\", null);\n    \n    msg.payload = \"Not Active\";\n    node.status({ fill: \"red\", shape: \"dot\", text: `Stopped: ${stoppedSession}` });\n    \n    let msg1_ui = { payload: \"Not Active\" };\n    let msg2_timer_cancel = { reset: true };\n    \n    return [ msg1_ui, msg2_timer_cancel ];\n}\n\n// Khi deploy, hiển thị trạng thái hiện tại\nif (activeSession) {\n    node.status({ fill: \"green\", shape: \"dot\", text: activeSession });\n} else {\n    node.status({ fill: \"red\", shape: \"dot\", text: \"Not Active\" });\n}\nreturn [null, null];",
+        "outputs": 2,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 470,
+        "y": 780,
+        "wires": [
+            [
+                "c621ede20767c4b0"
+            ],
+            [
+                "5a42c9f28b45bfba"
+            ]
+        ]
+    },
+    {
+        "id": "e4ff205febaa7b79",
+        "type": "ui_text_input",
+        "z": "02971eb66f715999",
+        "name": "",
+        "label": "Session Name",
+        "tooltip": "Nhập tên cho phiên đo",
+        "group": "session-group",
+        "order": 1,
+        "width": 5,
+        "height": 1,
+        "passthru": false,
+        "mode": "text",
+        "delay": 300,
+        "topic": "session_name",
+        "sendOnBlur": true,
+        "className": "",
+        "topicType": "str",
+        "x": 200,
+        "y": 720,
+        "wires": [
+            [
+                "9629148398aa94fd"
+            ]
+        ]
+    },
+    {
+        "id": "adc7e6bb7b031d8d",
+        "type": "ui_button",
+        "z": "02971eb66f715999",
+        "name": "",
+        "group": "session-group",
+        "order": 3,
+        "width": 5,
+        "height": 1,
+        "passthru": false,
+        "label": "START",
+        "tooltip": "Bắt đầu ghi dữ liệu cho phiên này",
+        "color": "green",
+        "bgcolor": "",
+        "className": "",
+        "icon": "play_arrow",
+        "payload": "",
+        "payloadType": "str",
+        "topic": "start",
+        "topicType": "str",
+        "x": 180,
+        "y": 780,
+        "wires": [
+            [
+                "9629148398aa94fd"
+            ]
+        ]
+    },
+    {
+        "id": "5a271d6333af4f31",
+        "type": "ui_button",
+        "z": "02971eb66f715999",
+        "name": "",
+        "group": "session-group",
+        "order": 4,
+        "width": 5,
+        "height": 1,
+        "passthru": false,
+        "label": "STOP",
+        "tooltip": "Dừng ghi dữ liệu",
+        "color": "red",
+        "bgcolor": "",
+        "className": "",
+        "icon": "stop",
+        "payload": "",
+        "payloadType": "str",
+        "topic": "stop",
+        "topicType": "str",
+        "x": 170,
+        "y": 820,
+        "wires": [
+            [
+                "9629148398aa94fd"
+            ]
+        ]
+    },
+    {
+        "id": "c621ede20767c4b0",
+        "type": "ui_text",
+        "z": "02971eb66f715999",
+        "group": "session-group",
+        "order": 5,
+        "width": 10,
+        "height": 1,
+        "name": "",
+        "label": "Current Session:",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 750,
+        "y": 760,
+        "wires": []
+    },
+    {
+        "id": "519039e29dbdaced",
+        "type": "ui_numeric",
+        "z": "02971eb66f715999",
+        "name": "",
+        "label": "Duration (s)",
+        "tooltip": "Để 0 nếu muốn chạy vô hạn (dừng thủ công)",
+        "group": "session-group",
+        "order": 2,
+        "width": 5,
+        "height": 1,
+        "wrap": false,
+        "passthru": false,
+        "topic": "duration",
+        "topicType": "str",
+        "format": "{{value}}",
+        "min": 0,
+        "max": 3600,
+        "step": 10,
+        "className": "",
+        "x": 190,
+        "y": 860,
+        "wires": [
+            [
+                "9629148398aa94fd"
+            ]
+        ]
+    },
+    {
+        "id": "5a42c9f28b45bfba",
+        "type": "delay",
+        "z": "02971eb66f715999",
+        "name": "Session Timer",
+        "pauseType": "delayv",
+        "timeout": "60",
+        "timeoutUnits": "seconds",
+        "rate": "1",
+        "nbRateUnits": "1",
+        "rateUnits": "second",
+        "randomFirst": "1",
+        "randomLast": "5",
+        "randomUnits": "seconds",
+        "drop": false,
+        "allowrate": false,
+        "outputs": 1,
+        "x": 760,
+        "y": 860,
+        "wires": [
+            [
+                "372a00c439c0bb19"
+            ]
+        ]
+    },
+    {
+        "id": "372a00c439c0bb19",
+        "type": "function",
+        "z": "02971eb66f715999",
+        "name": "Auto-Stop",
+        "func": "// Khi timer chạy xong, gửi tín hiệu STOP\nmsg.topic = \"stop\";\nmsg.payload = \"\";\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 920,
+        "y": 860,
+        "wires": [
+            [
+                "9629148398aa94fd"
+            ]
+        ]
+    },
+    {
+        "id": "8f6b0d56f5a27f00",
+        "type": "ui_chart",
+        "z": "02971eb66f715999",
+        "name": "BER Chart",
+        "group": "ac026eb928657c57",
+        "order": 8,
+        "width": 5,
+        "height": 5,
+        "label": "Min log of BER Chart",
+        "chartType": "line",
+        "legend": "false",
+        "xformat": "HH:mm:ss",
+        "interpolate": "linear",
+        "nodata": "",
+        "dot": false,
+        "ymin": "-12",
+        "ymax": "0",
+        "removeOlder": "1",
+        "removeOlderPoints": "60",
+        "removeOlderUnit": "60",
+        "cutout": 0,
+        "useOneColor": false,
+        "useUTC": false,
+        "colors": [
+            "#d62728",
+            "#000000",
+            "#000000",
+            "#000000",
+            "#000000",
+            "#000000",
+            "#000000",
+            "#000000",
+            "#000000"
+        ],
+        "outputs": 1,
+        "useDifferentColor": false,
+        "className": "",
+        "x": 1210,
+        "y": 640,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "6f4ca245b821bf4c",
+        "type": "function",
+        "z": "02971eb66f715999",
+        "name": "Convert BER to Number",
+        "func": "// Payload đến là string (ví dụ \"1.23e-5\")\nlet berValue = parseFloat(msg.payload);\n\n// 1. Chuyển đổi sang Logarit\n// Dùng Math.max để tránh lỗi log(0)\nlet logBer = Math.log10( Math.max(berValue, 1e-12) ); // 1e-12 là giá trị sàn\n\n// 2. Gửi giá trị log đi\nmsg.payload = logBer;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1010,
+        "y": 640,
+        "wires": [
+            [
+                "8f6b0d56f5a27f00"
+            ]
+        ]
+    },
+    {
+        "id": "1d4b95562654ff77",
+        "type": "function",
+        "z": "02971eb66f715999",
+        "name": "Store RSSI",
+        "func": "// 1. Lưu giá trị mới nhất vào global context\nglobal.set(\"current_rssi\", msg.payload);\n\n// 2. Gửi msg đi để cập nhật UI\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 550,
+        "y": 320,
+        "wires": [
+            [
+                "772e95e39f5fa045",
+                "10f5a68c555a6f1e"
+            ]
+        ]
+    },
+    {
+        "id": "ec96cd404114bc9e",
+        "type": "function",
+        "z": "02971eb66f715999",
+        "name": "Store Gain",
+        "func": "// 1. Lưu giá trị mới nhất vào global context\nglobal.set(\"current_gain\", msg.payload);\n\n// 2. Gửi msg đi để cập nhật UI\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 550,
+        "y": 460,
+        "wires": [
+            [
+                "dbaeb04e503fa6f7",
+                "4f85cd47ed32adcc"
+            ]
+        ]
+    },
+    {
+        "id": "f544504af2fd4d45",
+        "type": "ui_text",
+        "z": "02971eb66f715999",
+        "group": "session-group",
+        "order": 6,
+        "width": 10,
+        "height": 1,
+        "name": "",
+        "label": "Avg. BER (Session)",
+        "format": "{{msg.payload}}",
+        "layout": "row-spread",
+        "className": "",
+        "style": false,
+        "font": "",
+        "fontSize": 16,
+        "color": "#000000",
+        "x": 990,
+        "y": 760,
+        "wires": []
+    },
+    {
+        "id": "d71f11c76c58aa0e",
+        "type": "ui_spacer",
+        "z": "02971eb66f715999",
+        "name": "spacer",
+        "group": "625763203a3f7821",
+        "order": 3,
+        "width": 5,
+        "height": 1
+    },
+    {
+        "id": "fcb676e615b3bc01",
+        "type": "ui_spacer",
+        "z": "02971eb66f715999",
+        "name": "spacer",
+        "group": "ac026eb928657c57",
+        "order": 4,
+        "width": 5,
+        "height": 1
+    },
+    {
+        "id": "31eb23a2d3d60582",
+        "type": "ui_spacer",
+        "z": "02971eb66f715999",
+        "name": "spacer",
+        "group": "ac026eb928657c57",
+        "order": 9,
+        "width": 5,
+        "height": 1
+    },
+    {
+        "id": "9a1856e5d82fdab4",
+        "type": "mqtt-broker",
+        "name": "Local Broker",
+        "broker": "127.0.0.1",
+        "port": "1883",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthRetain": "false",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "625763203a3f7821",
+        "type": "ui_group",
+        "name": "Tx Msg",
+        "tab": "f898bb3166999c55",
+        "order": 1,
+        "disp": true,
+        "width": 5,
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "ac026eb928657c57",
+        "type": "ui_group",
+        "name": "Rx Msg",
+        "tab": "f898bb3166999c55",
+        "order": 2,
+        "disp": true,
+        "width": 12,
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "session-group",
+        "type": "ui_group",
+        "name": "Session Management",
+        "tab": "f898bb3166999c55",
+        "order": 1,
+        "disp": true,
+        "width": 10,
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "ab4406daca1fd4b0",
+        "type": "MySQLdatabase",
+        "name": "SDR Database",
+        "host": "127.0.0.1",
+        "port": "3306",
+        "db": "sdr_data",
+        "tz": "",
+        "charset": "UTF8"
+    },
+    {
+        "id": "f898bb3166999c55",
+        "type": "ui_tab",
+        "name": "ADALM PLUTO",
+        "icon": "text_format",
+        "order": 2,
+        "disabled": false,
+        "hidden": false
+    },
+    {
+        "id": "f23b69cea6e56399",
+        "type": "global-config",
+        "env": [],
+        "modules": {
+            "node-red-dashboard": "3.6.6",
+            "node-red-node-mysql": "2.0.0"
+        }
+    }
+]

@@ -1,0 +1,35 @@
+id: mqtt_publisher
+label: MQTT Publisher
+category: 'MQTT'
+file_format: 1
+
+templates:
+  imports: from gnuradio.mqtt.mqtt_publisher import mqtt_publisher
+  make: mqtt_publisher(${host}, ${port}, ${username}, ${password}, ${topic})
+
+parameters:
+- id: host
+  label: Host
+  dtype: string
+  default: '"127.0.0.1"'
+- id: port
+  label: Port
+  dtype: int
+  default: 1883
+- id: username
+  label: Username
+  dtype: string
+  default: 'None'
+- id: password
+  label: Password
+  dtype: string
+  default: 'None'
+- id: topic
+  label: Topic
+  dtype: string
+  default: '"gnuradio/output"'
+
+inputs:
+- label: in
+  domain: stream
+  dtype: byte

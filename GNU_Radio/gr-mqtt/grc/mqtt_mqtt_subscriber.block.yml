@@ -1,0 +1,43 @@
+id: mqtt_subscriber
+label: MQTT Subscriber
+category: 'MQTT'
+file_format: 1
+
+templates:
+  imports: from gnuradio.mqtt.mqtt_subscriber import mqtt_subscriber
+  make: mqtt_subscriber(${host}, ${port}, ${username}, ${password}, ${topic}, ${buf_len}, ${max_len})
+
+parameters:
+- id: host
+  label: Host
+  dtype: string
+  default: '"127.0.0.1"'
+- id: port
+  label: Port
+  dtype: int
+  default: 1883
+- id: username
+  label: Username
+  dtype: string
+  default: 'None'
+- id: password
+  label: Password
+  dtype: string
+  default: 'None'
+- id: topic
+  label: Topic
+  dtype: string
+  default: '"gnuradio/input"'
+- id: buf_len
+  label: Buffer Length
+  dtype: int
+  default: 1024
+- id: max_len
+  label: Max Payload Length
+  dtype: int
+  default: 255
+
+outputs:
+- label: out
+  domain: stream
+  dtype: byte
