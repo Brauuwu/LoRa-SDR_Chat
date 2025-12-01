@@ -64,3 +64,5 @@ Next, the out of tree module gr-mqtt can be installed from source
 - Import [flow.js](https://github.com/Brauuwu/LoRa-SDR_Chat/blob/main/Node-RED/flows.json) into Node-RED
 ## Credit
 Thanks so much for ideas and all Blocks made by [J. Tapparel, O. Afisiadis, P. Mayoraz, A. Balatsoukas-Stimming and A. Burg](https://github.com/tapparelj/gr-lora_sdr)
+
+We will always be ready to update and develop this source code for the purpose of monitoring and optimizing the performance of LoRa communication in the future.
