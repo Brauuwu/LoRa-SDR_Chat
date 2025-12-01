@@ -60,3 +60,5 @@ Next, the out of tree module gr-mqtt can be installed from source
 	npm install node-red-dashboard node-red-node-mysql
 	```
 - Import [flow.js](https://github.com/Brauuwu/LoRa-SDR_Chat/blob/main/Node-RED/flows.json) into Node-RED
+## Credit
+Thanks so much for ideas and all Blocks made by [J. Tapparel, O. Afisiadis, P. Mayoraz, A. Balatsoukas-Stimming and A. Burg](https://github.com/tapparelj/gr-lora_sdr)
