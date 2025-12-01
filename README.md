@@ -4,7 +4,7 @@ Node-RED and GNURadio Scripts for "Developing an SDR-Based LoRa Communication Sy
 ### <sup>1</sup>Faculty of Telecommunications 1, Posts and Telecommunications Institute of Technology, Hanoi, Vietnam
 ### <sup>2</sup>Department of Electrical Engineering, Ecole de technologie superieure, University of Quebec, Quebec, Canada
 ## Installation
-### Backend
+### GNU Radio - Backend
 Firstly, we affirm to publicly use the source code [tapparelj/gr-lora_sdr](https://github.com/tapparelj/gr-lora_sdr) combined with the mqtt source code we built.
 - Download the latest release of conda:
   - Linux PC:
@@ -53,7 +53,7 @@ Next, the out of tree module gr-mqtt can be installed from source
 	```sh
 	make install ..
 	```
-### Frontend
+### Node-RED - Frontend
 - Install [Node-RED](https://nodered.org/docs/getting-started/raspberrypi)
 - Run Node-RED and download nodes `node-red-dashboard` and `node-red-node-mysql` in Manage palletes or use this command
 	```sh
