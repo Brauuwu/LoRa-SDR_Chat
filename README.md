@@ -16,13 +16,13 @@ Firstly, we affirm to publicly use the source code [tapparelj/gr-lora_sdr](https
   	wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-aarch64.sh
   	```
   - Now run the downloaded file which is the Anaconda Installer script
-		```sh
-	 	bash Miniconda3-latest-Linux-x86_64.sh
-		```
-	- And reload the Shell
-		```sh
-		source ~/.bashrc
-		```
+	```sh
+	bash Miniconda3-latest-Linux-x86_64.sh
+	```
+  - And reload the Shell
+	```sh
+	source ~/.bashrc
+	```
   - Create environment to install all the dependencies of the module
   ```sh
 	conda create -n grlora python=3.10
