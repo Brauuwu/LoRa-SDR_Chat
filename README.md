@@ -51,6 +51,6 @@ Next, the out of tree module gr-mqtt can be installed from source
 	```
 - Finally compile the custom GNU Radio blocks.
 	```sh
-	make ..
+	make install ..
 	```
 ### Frontend
