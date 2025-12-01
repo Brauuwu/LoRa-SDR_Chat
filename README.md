@@ -37,7 +37,7 @@ Firstly, we affirm to publicly use the source code [tapparelj/gr-lora_sdr](https
 	```
 Next, the out of tree module gr-mqtt can be installed from source
 - Clone our repository
-  ```sh
+  	```sh
 	git clone https://github.com/Brauuwu/LoRa-SDR_Chat.git
 	```
 - Go to the cloned repository
@@ -54,3 +54,9 @@ Next, the out of tree module gr-mqtt can be installed from source
 	make install ..
 	```
 ### Frontend
+- Install [Node-RED](https://nodered.org/docs/getting-started/raspberrypi)
+- Run Node-RED and download nodes `node-red-dashboard` and `node-red-node-mysql` in Manage palletes or use this command
+	```sh
+	npm install node-red-dashboard node-red-node-mysql
+	```
+- Import [flow.js](https://github.com/Brauuwu/LoRa-SDR_Chat/blob/main/Node-RED/flows.json) into Node-RED
